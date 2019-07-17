@@ -5,6 +5,7 @@ import torch.optim as optim
 import torchvision.transforms as transforms
 from dataset import Cifar10Dataset
 from tensorboardX import SummaryWriter
+import torchvision
 
 
 class ResidualBlock(nn.Module):
@@ -115,12 +116,15 @@ def run(device):
     # 标准化为范围在[-1, 1]之间的张量
     transform = transforms.Compose([transforms.ToTensor(),
                                     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
-    # 训练集
-    trainset = Cifar10Dataset(root='./data', train=True, transform=transform)  # 训练数据集
+    # 数据集
+	# # 利用自定义 Dataset
+    # trainset = Cifar10Dataset(root='./Cifar-10', train=True, transform=transform)  # 训练数据集
+    # testset = Cifar10Dataset(root='./Cifar-10', train=False, transform=transform)
+    # 利用库函数进行数据集加载
+    trainset = torchvision.datasets.CIFAR10(root='./Cifar-10', train=True, download=True, transform=transform)  # 训练数据集
+    testset = torchvision.datasets.CIFAR10(root='./Cifar-10', train=False, download=True, transform=transform)
     # 生成一个个batch进行批训练，组成batch的时候顺序打乱取
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=BATCH_SIZE, shuffle=True)
-    # 测试集
-    testset = Cifar10Dataset(root='./data', train=False, transform=transform)
     testloader = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False)
     # Cifar-10的标签
     # 建立神经网络

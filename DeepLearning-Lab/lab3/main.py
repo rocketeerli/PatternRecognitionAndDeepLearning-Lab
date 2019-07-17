@@ -25,12 +25,12 @@ if __name__ == '__main__':
     elif args.cuda == 'CPU':
         device = torch.device('cpu')
     # 选择是否执行vgg11
-    choicess = input('请选择是(1),否(0)运行vgg-11')
+    choicess = input('请选择是(1),否(0)运行vgg-11\nYour choice:')
     if choicess == '1':
         import vgg
         vgg.run(device)
     # 选择是否执行resNet18
-    choicess_1 = input('请选择是(1),否(0)运行ResNet-18')
+    choicess_1 = input('请选择是(1),否(0)运行ResNet-18\nYour choice:')
     if choicess_1 == '1':
         import resNet
         resNet.run(device)

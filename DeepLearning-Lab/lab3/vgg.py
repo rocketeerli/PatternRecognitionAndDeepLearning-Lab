@@ -6,7 +6,7 @@ import torch.nn as nn
 import numpy as np
 from tensorboardX import SummaryWriter
 from dataset import Cifar10Dataset
-
+import torchvision
 
 class VGG(nn.Module):
 
@@ -146,10 +146,12 @@ def exam_model(epoch, model, writer, test_loader, loss_func, device):
 
 
 def choice(model):
-    print('=             请选择优化方式     =')
-    print('=             1.Adam            =')
-    print('=             2.SGD             =')
-    print('=             3.RMSprop         =')
+    print('=====================================')
+    print('===             请选择优化方式    ===')
+    print('===             1.Adam            ===')
+    print('===             2.SGD             ===')
+    print('===             3.RMSprop         ===')
+    print('=====================================')
     choices = int(input())
     if choices == 1:
         # 选用Adam作为优化器，学习率为0.001
@@ -167,9 +169,12 @@ def run(device):
     writer = SummaryWriter('./logs_vgg')
     train_transform = transforms.Compose([transforms.RandomHorizontalFlip(), transforms.ToTensor()])
     test_transform = transforms.Compose([transforms.ToTensor()])
-    # 下载cifar-10数据集，分为训练集train_set和测试集test_set
-    train_set = Cifar10Dataset(root='./data', train=True, transform=train_transform)
-    test_set = Cifar10Dataset(root='./data', train=False, transform=test_transform)
+    # # 利用自定义 Dataset
+    # train_set = Cifar10Dataset(root='./Cifar-10', train=True, transform=transform)  # 训练数据集
+    # test_set = Cifar10Dataset(root='./Cifar-10', train=False, transform=transform)
+    # 利用库函数进行数据集加载
+    train_set = torchvision.datasets.CIFAR10(root='./Cifar-10', train=True, download=True, transform=train_transform)  # 训练数据集
+    test_set = torchvision.datasets.CIFAR10(root='./Cifar-10', train=False, download=True, transform=test_transform)
     # 将数据集整理成batch的形式并转换为可迭代对象，200行
     train_loader = torch.utils.data.DataLoader(dataset=train_set, batch_size=200, shuffle=True)
     test_loader = torch.utils.data.DataLoader(dataset=test_set, batch_size=200, shuffle=False)
